@@ -5,13 +5,12 @@
 import avahi, dbus
 from encodings.idna import ToASCII
 import time, sys, os, locale
-from xml.etree.ElementTree import ElementTree
 
 import logging
 logging.basicConfig(level=logging.WARNING)
 
 # Path we'll check for services with host-names
-service_path = "/etc/avahi/services"
+ALIAS_PATH = "/etc/avahi/alias.d"
 
 # Got these from /usr/include/avahi-common/defs.h
 CLASS_IN = 0x01
@@ -53,31 +52,22 @@ def createRR(name):
 def get_service_hostnames():
 	# returns a list of hostname if found
 	hostnames = []
-	for service in os.listdir(service_path):
-		tree = ElementTree()
-		try:
-			tree.parse("/".join((service_path, service)))
-		except Exception, e:
-			logging.warning("Unable to read file: %s" % "/".join((service_path, service)))
-			continue
-		is_cname = tree.getroot().findtext('service/subtype')
-		if is_cname is not None and is_cname.find("_cname") > -1:
-			hostname = tree.getroot().findtext('service/host-name')
-			if hostname is not None:
-				logging.debug("Found hostname '%s' in %s." % (hostname, "/".join((service_path, service))))
-				hostnames.append(hostname)
+	for aliases_file in os.listdir(ALIAS_PATH):
+		f = open(os.path.join(ALIAS_PATH, aliases_file))
+		for line in f:
+			line = line.strip()
+			if line != '':
+				hostnames.append(line)
 	return hostnames
 
 if __name__ == '__main__':
 	try:
 		# Just loop forever
-		while 1: 
-			cnames = get_service_hostnames()
-			if len(cnames) > 0:
-				for cname in cnames:
-					name = unicode(cname, locale.getpreferredencoding())
-					logging.info("Publishing cname '%s'" % name)
-					publish_cname(name)
+		while 1:
+			for cname in get_service_hostnames():
+				name = unicode(cname, locale.getpreferredencoding())
+				logging.info("Publishing cname '%s'" % name)
+				publish_cname(name)
 			time.sleep( TTL - 5 )
 	except KeyboardInterrupt:
 		logging.info("Exiting")
