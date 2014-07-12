@@ -1,0 +1,11 @@
+description "Avahi mDNS CNAME Daemon"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+setuid avahi
+setgid avahi
+
+respawn
+
+exec /usr/sbin/avahi-alias

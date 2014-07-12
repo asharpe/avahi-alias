@@ -9,14 +9,17 @@ modification:
 * Turn the script into a daemon with a debian init script.
 * Reads CNAMES from flat files in `/etc/avahi/alias.d`.
 
-Installation
+Requirements
 ============
 
-1. Copy `avahi-alias` to `/usr/sbin/avahi-alias`.
-1. Copy `avahi-alias.init` to `/etc/init.d/avahi-alias`
-1. Enable the init script with
+`avahi-alias` requires `python-avahi`. The installation below assumes Upstart
+and has been tested on Ubuntu 12.04.
 
-		/usr/sbin/invoke-rc.d avahi-alias defaults
+Installation using Upstart
+==========================
+
+1. Copy `avahi-alias` to `/usr/sbin/avahi-alias`.
+1. Copy `avahi-alias.upstart` to `/etc/init/avahi-alias.conf`
 
 Usage
 =====
