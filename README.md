@@ -6,7 +6,7 @@ avahi-daemon.  These scripts are an adaption of the script at
 http://www.avahi.org/wiki/Examples/PythonPublishAlias with the following
 modification:
 
-* Turn the script into a daemon with a debian init script.
+* Turn the script into a daemon via Upstart.
 * Reads CNAMES from flat files in `/etc/avahi/alias.d`.
 
 Requirements
