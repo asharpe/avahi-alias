@@ -13,6 +13,7 @@ respawn
 # this needs an accompanying sudo configuration as follows
 # NOTE: this is less than ideal
 # Defaults:root !requiretty
+# see also https://www.centos.org/forums/viewtopic.php?t=4300#p192497
 
 exec sudo -u $USER /opt/avahi-alias/avahi-alias >>/var/log/avahi-alias.log 2>&1
 
